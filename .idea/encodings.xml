@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/src/com/binggou/mission/MissionCenter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/binggou/mission/MissionConfig.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/hjhz/sms/mission/core/about/data/dao/SmsDao.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/hjhz/sms/mission/core/about/data/dto/Message.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/hjhz/sms/mission/core/sql/oracle9/Oracle9SQL.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/hjhz/sms/mission/core/sqlfactory/SqlFactory.java" charset="GBK" />
+  </component>
+</project>

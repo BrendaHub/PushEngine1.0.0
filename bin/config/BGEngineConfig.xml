@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="GB2312"?>
+<config>
+	<!-- 和佳汇智短信平台配置-->
+	<HJHZConnect>
+		<!-- 和佳汇智短信平台Socket协议地址 -->
+		<init-param>
+			<param-name>host</param-name>
+			<param-value>192.25.97.108</param-value>
+		</init-param>
+       <!-- 和佳汇智短信平台Socket协议端口号 -->
+       <init-param>
+			<param-name>port</param-name>
+			<param-value>10002</param-value>
+		</init-param>
+       <!-- 和佳汇智短信平台登录帐号 -->
+       <init-param>
+			<param-name>login-name</param-name>
+			<param-value>Admin</param-value>
+		</init-param>
+       <!-- 和佳汇智短信平台 -->
+       <init-param>
+			<param-name>login-password</param-name>
+			<param-value>111111</param-value>
+		</init-param>
+       <!-- 发送信息间隔时间(单位：毫秒) -->
+       <init-param>
+			<param-name>heartbeat-interval</param-name>
+			<param-value>1000</param-value>
+		</init-param>
+       <!-- 连接中断时重连间隔时间(单位：毫秒)-->
+       <init-param>
+			<param-name>reconnect-interval</param-name>
+			<param-value>1000</param-value>
+		</init-param>
+       <!-- 短信签名 -->
+       <init-param>
+			<param-name>signature</param-name>
+			<param-value>[haha]</param-value>
+		</init-param>
+		
+       <!-- 提交上行短信的帐号 -->
+       <init-param>
+			<param-name>mo-username</param-name>
+			<param-value>citicsmoagent</param-value>
+		</init-param>
+       <!-- 提交上行短信的帐号的密码 -->
+       <init-param>
+			<param-name>mo-userpassword</param-name>
+			<param-value>111111</param-value>
+		</init-param>		
+
+		<!-- 引擎发送短信的通道 -->
+		<init-param>
+			<param-name>channel-id</param-name>
+			<param-value>90</param-value>
+		</init-param>
+       <!-- 发送失败短信的重新提交次数 -->
+       <init-param>
+			<param-name>resend-times</param-name>
+			<param-value>3</param-value>
+		</init-param>
+		<!-- 一次打包发送短信的数量(1<= pack-quantities <=100。其他数值无意义，会按1处理) -->
+        <init-param>
+			<param-name>pack-quantities</param-name>
+			<param-value>400</param-value>
+		</init-param>
+       <!-- 数据库类型 4-ORACLE, 5-SQLSERVER 6-MySQL-->
+       <init-param>
+			<param-name>db-type</param-name>
+			<param-value>6</param-value>
+		</init-param>
+	  <!-- 移动号段 -->
+      <init-param>
+			<param-name>yd-type</param-name>
+			<param-value>134,135,136,137,138,139,150,151,152,157,158,159,187,188</param-value>			             
+	   </init-param>
+	   <!-- 联通号段 -->
+       <init-param>
+			<param-name>lt-type</param-name>
+			<param-value>130,131,132,155,156,185,186</param-value>
+		</init-param>
+	   <!-- 电信号段 -->
+       <init-param>
+			<param-name>dx-type</param-name>
+			<param-value>0,133,153,180,189</param-value>
+		</init-param>
+
+	</HJHZConnect>
+</config>

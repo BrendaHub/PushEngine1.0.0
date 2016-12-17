@@ -1,0 +1,55 @@
+#和佳汇智封装信鸽App消息推送的参数配置,基于Android和IOS二个平台
+#当前版本1.0
+###############################################
+#支持功能描述：
+#配置参数分全局参数、局部参数二部分，全局参数表示在Android和IOS二个push均有效;
+						   局部参数表示只针对Androi 或 IOS 的push有效，具体请查看下文描述; 
+#当前版本支持按token推送消息，不支持按App端设置的账号或昵称推送消息
+#支持单条消息推送
+#支持按token进行大批量消息推送
+					   
+#######################全局参数###################
+#全局参数：参数名称以global_为键的前缀
+#expireTime 表示消息离线存储多久，单位为秒，最长存储时间3天。选填，默认为3天，不允许为0
+global_expireTime=3
+
+#sendTime  消息定时推送的时间，格式为year-mon-day hour:min:sec，若小于服务器当前时间则立即推送。选填，默认为空字符串，代表立即推送
+#          当调用大批量push消息接口时，不支持sendTime参数。
+global_sendTime=""
+
+#acceptTime 表示允许推送的时间段, 如0, 0, 23, 59,表示 0点0分到23点59分之间允许push消息
+global_acceptTime=0, 0, 23, 59
+
+#custom 消息push时可以自己扩展的参数配，也允许在调用接口时动态传入扩展参数, 针对IOS时，所有的参数都会占据消息的整体长度.
+global_extParam_count=0
+global_extKey_0=
+global_extValue_0=
+global_extKey_1=
+global_extValue_1=
+global_extKey_2=
+global_extValue_2=
+
+#######################部局参数   > Android###################
+#AccessID 推送目标应用ID,是一个long类型的数据，配置时请在后面添加L
+A_AccessID=2100165076
+#SecretKey 目标应用的密钥, 在信鸽的应用配置平台可以获取
+A_SecretKey=55f5aafeb0c4adc2635f345ddfd72a9f
+
+#style 消息样式配置，依次为$builderId int类型， 本地通知样式  必填， 默认为0
+#					[,$ring]是否响铃，0否，1是。选填，默认0
+#					[,$vibrate]是否振动，0否，1是。选填，默认0
+#					[,$clearable]通知栏是否可清除，0否，1是。选填，默认1
+#					[,$nId]若大于0，则会覆盖先前弹出的相同id通知；若为0，展示本条通知且不影响其他通知；若为-1，将清除先前弹出的所有通知，仅展示本条通知。选填，默认为0
+#					[,$lights]是否呼吸灯，0否，1是，选填，默认1
+#					[,$iconType]指定通知栏图标是使用应用内图标还是使用自己上传的图标。0是应用内图标，1是上传图标，选填。默认0
+#					[,$styleId]Web端设置是否覆盖编号的通知样式，0否，1是，选填。默认1
+#以上参在下面配置项里面按顺序配置即可，以下是默认配置,如没有特殊需求，不要修改
+A_style=0,0,0,1,0,1,0,1
+
+#######################部局参数   > IOS###################
+#AccessID 推送目标应用ID,是一个long类型的数据，配置时请在后面添加L
+I_AccessID=2200165077
+#SecretKey 目标应用的密钥, 在信鸽的应用配置平台可以获取
+I_SecretKey=9d3c00f67aecf7d81eec1b5decdd56fe
+#IOS 当前消息推送环境  IOSENV_DEV(开发环境)， IOSENV_PROD(生产环境)
+I_IOS_ENV=IOSENV_DEV

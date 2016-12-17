@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="GB2312"?>
+<config>
+
+	<Channel90>
+		<channel-class>com.binggou.sms.mission.core.send.impl.bg_sms.BGSMSCommon</channel-class>
+	</Channel90>
+	
+</config>
