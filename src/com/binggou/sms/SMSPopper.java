@@ -66,25 +66,8 @@ public class SMSPopper extends Popper
     	if (task == null)
     	{
     		return true;
-    		}
- 	    try{
-	    	/**检验发送截止时间,发送截止时间早于当前时间,说明发送截止时间已过,不再发送短信*/
- 	    	int a = Integer.parseInt((String) task.getAttribValue("status"));
-	        if(task.getAttribValue("status") != null){
-	             //Timestamp sendDeadline = (Timestamp)task.getAttribValue("pushTime");
-		         if(a==1||a==5){
-		               task.addAttrib("SUBMIT","overSendDeadline");
-		               callbackQueue.putTask(task);//发送完成的任务放到回调任务队列
-		               return true;
-		         }
-	        } 
- 	    }
- 	    catch(Exception e)
- 	    {
- 	    	e.printStackTrace();
-// 	    	logger.info("发送截止时间出现错误");
-			System.out.println("发送截止时间出现错误");
 		}
+ 	    
        /**获得一个待处理任务,从榨取队列里面来获取*/
         try
         {

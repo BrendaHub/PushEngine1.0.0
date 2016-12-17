@@ -1,16 +1,19 @@
 package com.binggou.sms;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.binggou.mission.MissionCenter;
 import com.binggou.sms.mission.core.about.util.SmsplatGlobalVariable;
 
 
 import com.binggou.mission.Callback;
 import com.binggou.mission.Task;
+import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -27,7 +30,7 @@ import com.binggou.mission.Task;
 public class SMSCallback extends Callback
 {
 	public static String module = SMSCallback.class.getName();
-	
+	private static Logger logger = Logger.getLogger(SMSCallback.class.getName());//日志类
 	private NumberFormat nf = new DecimalFormat("000000");
 	private boolean resend_times_flag = false;//发送失败短信的重新提交次数 是否启用,默认不启用
 	private int resend_times_q=3;//发送失败短信的重新提交次数
@@ -120,21 +123,24 @@ public class SMSCallback extends Callback
 				sqlBridge.setLong(3, (Long)task.getAttribValue("pushTime"));//设置推送的时间戳 
 				sqlBridge.setLong(4, new Date().getTime());//设置回调的时间戳 	
 				updateRows = sqlBridge.executePreparedUpdate();
-            }else if("xinge_success".equals((String)task.getAttribValue("SUBMIT"))){
-            	String preparedSql = "UPDATE t_push_task SET status = ? , status_info = ?, push_time = ?, report_time= ?, push_back_ID=?  WHERE id in ( "+task.getTaskId()+" )";//批量处理
+            }else if("bg_getui_success".equals((String)task.getAttribValue("SUBMIT"))){
+            	String preparedSql = "UPDATE bg_task_push SET status = ? , err_info = ?, push_time = ?, callback_id=?  WHERE id in ( "+task.getTaskId()+" )";//批量处理
+				System.out.println("回调处理SQL = " + preparedSql);
 				sqlBridge.prepareExecuteUpdate(preparedSql);
 				sqlBridge.setInt(1, SmsplatGlobalVariable.SEND_STATE);//设置为发送成功
 				sqlBridge.setString(2, (String)task.getAttribValue("ERR_MSG"));//标识错误原因
-				sqlBridge.setLong(3, (Long)task.getAttribValue("pushTime"));//设置推送的时间戳
-				sqlBridge.setLong(4, new Date().getTime());//设置回调的时间戳 
-				sqlBridge.setInt(5, (Integer)task.getAttribValue("pushId"));//设置推送Id
+				sqlBridge.setLong(3, System.currentTimeMillis());//设置推送的时间戳
+				sqlBridge.setInt(4, (Integer)task.getAttribValue("pushId"));//设置推送Id
 				updateRows = sqlBridge.executePreparedUpdate();
-				String preparedSql2 = "UPDATE t_message SET push_id = ? ,push_time = ? WHERE id in ( "+task.getAttribValue("mesgId")+" )";
-				sqlBridge.prepareExecuteUpdate(preparedSql2);
-				sqlBridge.setInt(1, (Integer)task.getAttribValue("pushId"));//设置推送Id
-				sqlBridge.setLong(2, (Long)task.getAttribValue("pushTime"));//设置推送时间
+            }else if("bg_sms_success".equals((String)task.getAttribValue("SUBMIT"))){
+				String preparedSql = "UPDATE bg_task_sms SET status = ? , err_info = ?, send_time = ? WHERE id in ( "+task.getTaskId()+" )";//批量处理
+				System.out.println("回调处理SQL = " + preparedSql);
+				sqlBridge.prepareExecuteUpdate(preparedSql);
+				sqlBridge.setInt(1, SmsplatGlobalVariable.SEND_STATE);//设置为发送成功
+				sqlBridge.setString(2, (String)task.getAttribValue("ERR_MSG"));//标识错误原因
+				sqlBridge.setTimestamp(3, new Timestamp(System.currentTimeMillis()));//设置推送的时间戳
 				updateRows = sqlBridge.executePreparedUpdate();
-            }
+			}
 		}catch (Exception e){
 			//Debug.logError(e, module);
 			e.printStackTrace();

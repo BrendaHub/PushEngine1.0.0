@@ -17,7 +17,6 @@ public class ConnectionFactory {
     public ConnectionFactory() {}
 
     public static String repath= "datasource.properties";
-//    public static Logger log=Logger.getLogger(connectFactory.class);
     public static ComboPooledDataSource cpds = new ComboPooledDataSource();
     public static boolean CommitOnClose=false;
     public static void createDataSource(){
@@ -38,7 +37,7 @@ public class ConnectionFactory {
             Properties p =  new  Properties();
             p.load(inputStream);
 
-
+            System.out.println(">???? =" + p.getProperty("c3p0.DriverClass"));
 
             cpds.setDriverClass(p.getProperty("c3p0.DriverClass"));
             cpds.setJdbcUrl(p.getProperty("c3p0.JdbcUrl"));
@@ -59,7 +58,6 @@ public class ConnectionFactory {
             }
 //            in.close();
         } catch(Exception e){
-//            log.error(e.toString());toString
             e.printStackTrace();
             System.exit(0);
         }finally {
@@ -87,6 +85,7 @@ public class ConnectionFactory {
             return conn;
         } catch(SQLException e){
 //            log.error(e.toString());
+            e.printStackTrace();
             return null;
         }
     }

@@ -1,85 +1,85 @@
 <?xml version="1.0" encoding="GB2312"?>
 <config>
-	<!-- å’Œä½³æ±‡æ™ºçŸ­ä¿¡å¹³å°é…ç½®-->
+	<!-- ºÍ¼Ñ»ãÖÇ¶ÌÐÅÆ½Ì¨ÅäÖÃ-->
 	<HJHZConnect>
-		<!-- å’Œä½³æ±‡æ™ºçŸ­ä¿¡å¹³å°Socketåè®®åœ°å€ -->
+		<!-- ºÍ¼Ñ»ãÖÇ¶ÌÐÅÆ½Ì¨SocketÐ­ÒéµØÖ· -->
 		<init-param>
 			<param-name>host</param-name>
 			<param-value>192.25.97.108</param-value>
 		</init-param>
-       <!-- å’Œä½³æ±‡æ™ºçŸ­ä¿¡å¹³å°Socketåè®®ç«¯å£å· -->
+       <!-- ºÍ¼Ñ»ãÖÇ¶ÌÐÅÆ½Ì¨SocketÐ­Òé¶Ë¿ÚºÅ -->
        <init-param>
 			<param-name>port</param-name>
 			<param-value>10002</param-value>
 		</init-param>
-       <!-- å’Œä½³æ±‡æ™ºçŸ­ä¿¡å¹³å°ç™»å½•å¸å· -->
+       <!-- ºÍ¼Ñ»ãÖÇ¶ÌÐÅÆ½Ì¨µÇÂ¼ÕÊºÅ -->
        <init-param>
 			<param-name>login-name</param-name>
 			<param-value>Admin</param-value>
 		</init-param>
-       <!-- å’Œä½³æ±‡æ™ºçŸ­ä¿¡å¹³å° -->
+       <!-- ºÍ¼Ñ»ãÖÇ¶ÌÐÅÆ½Ì¨ -->
        <init-param>
 			<param-name>login-password</param-name>
 			<param-value>111111</param-value>
 		</init-param>
-       <!-- å‘é€ä¿¡æ¯é—´éš”æ—¶é—´(å•ä½ï¼šæ¯«ç§’) -->
+       <!-- ·¢ËÍÐÅÏ¢¼ä¸ôÊ±¼ä(µ¥Î»£ººÁÃë) -->
        <init-param>
 			<param-name>heartbeat-interval</param-name>
 			<param-value>1000</param-value>
 		</init-param>
-       <!-- è¿žæŽ¥ä¸­æ–­æ—¶é‡è¿žé—´éš”æ—¶é—´(å•ä½ï¼šæ¯«ç§’)-->
+       <!-- Á¬½ÓÖÐ¶ÏÊ±ÖØÁ¬¼ä¸ôÊ±¼ä(µ¥Î»£ººÁÃë)-->
        <init-param>
 			<param-name>reconnect-interval</param-name>
 			<param-value>1000</param-value>
 		</init-param>
-       <!-- çŸ­ä¿¡ç­¾å -->
+       <!-- ¶ÌÐÅÇ©Ãû -->
        <init-param>
 			<param-name>signature</param-name>
 			<param-value>[haha]</param-value>
 		</init-param>
 		
-       <!-- æäº¤ä¸Šè¡ŒçŸ­ä¿¡çš„å¸å· -->
+       <!-- Ìá½»ÉÏÐÐ¶ÌÐÅµÄÕÊºÅ -->
        <init-param>
 			<param-name>mo-username</param-name>
 			<param-value>citicsmoagent</param-value>
 		</init-param>
-       <!-- æäº¤ä¸Šè¡ŒçŸ­ä¿¡çš„å¸å·çš„å¯†ç  -->
+       <!-- Ìá½»ÉÏÐÐ¶ÌÐÅµÄÕÊºÅµÄÃÜÂë -->
        <init-param>
 			<param-name>mo-userpassword</param-name>
 			<param-value>111111</param-value>
 		</init-param>		
 
-		<!-- å¼•æ“Žå‘é€çŸ­ä¿¡çš„é€šé“ -->
+		<!-- ÒýÇæ·¢ËÍ¶ÌÐÅµÄÍ¨µÀ -->
 		<init-param>
 			<param-name>channel-id</param-name>
 			<param-value>90</param-value>
 		</init-param>
-       <!-- å‘é€å¤±è´¥çŸ­ä¿¡çš„é‡æ–°æäº¤æ¬¡æ•° -->
+       <!-- ·¢ËÍÊ§°Ü¶ÌÐÅµÄÖØÐÂÌá½»´ÎÊý -->
        <init-param>
 			<param-name>resend-times</param-name>
 			<param-value>3</param-value>
 		</init-param>
-		<!-- ä¸€æ¬¡æ‰“åŒ…å‘é€çŸ­ä¿¡çš„æ•°é‡(1<= pack-quantities <=100ã€‚å…¶ä»–æ•°å€¼æ— æ„ä¹‰ï¼Œä¼šæŒ‰1å¤„ç†) -->
+		<!-- Ò»´Î´ò°ü·¢ËÍ¶ÌÐÅµÄÊýÁ¿(1<= pack-quantities <=100¡£ÆäËûÊýÖµÎÞÒâÒå£¬»á°´1´¦Àí) -->
         <init-param>
 			<param-name>pack-quantities</param-name>
 			<param-value>400</param-value>
 		</init-param>
-       <!-- æ•°æ®åº“ç±»åž‹ 4-ORACLE, 5-SQLSERVER 6-MySQL-->
+       <!-- Êý¾Ý¿âÀàÐÍ 4-ORACLE, 5-SQLSERVER 6-MySQL-->
        <init-param>
 			<param-name>db-type</param-name>
 			<param-value>6</param-value>
 		</init-param>
-	  <!-- ç§»åŠ¨å·æ®µ -->
+	  <!-- ÒÆ¶¯ºÅ¶Î -->
       <init-param>
 			<param-name>yd-type</param-name>
 			<param-value>134,135,136,137,138,139,150,151,152,157,158,159,187,188</param-value>			             
 	   </init-param>
-	   <!-- è”é€šå·æ®µ -->
+	   <!-- ÁªÍ¨ºÅ¶Î -->
        <init-param>
 			<param-name>lt-type</param-name>
 			<param-value>130,131,132,155,156,185,186</param-value>
 		</init-param>
-	   <!-- ç”µä¿¡å·æ®µ -->
+	   <!-- µçÐÅºÅ¶Î -->
        <init-param>
 			<param-name>dx-type</param-name>
 			<param-value>0,133,153,180,189</param-value>

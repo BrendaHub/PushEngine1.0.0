@@ -85,12 +85,11 @@ public class SQLBridge
             System.out.println(">>>>@@@@");
 //            conn = ConnectionFactory.getInstance().getConnection();
             conn = ConnectionFactory.getConnection();
-            System.out.println("建立与数据库的连接〈〉〈〉"+ conn);
+            System.out.println("建立与数据库的连接 = "+ conn);
             conn.setAutoCommit(true);
         }
         catch (Exception e)
         {
-            System.out.println("asdfasdf333");
 //        	logger.error(e.getMessage());
             e.printStackTrace();
             return false;

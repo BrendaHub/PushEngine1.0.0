@@ -14,8 +14,6 @@ import java.util.LinkedList;
 import com.binggou.sms.mission.core.about.util.ConnectionFactory;
 import com.binggou.sms.mission.core.about.util.SmsplatGlobalVariable;
 import org.apache.log4j.Logger;
-//import org.apache.commons.logging.impl.LogFactoryImpl;
-//import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -50,7 +48,6 @@ public class MissionCenter
     private long reconnect_interval =0;//连接中断时重连间隔时间(单位：毫秒)
     private long heartbeat_interval =0;//心跳信息发送间隔时间(单位：毫秒)
     private boolean doFailback = true;//是否进行故障恢复
-//    private static Logger logger = LogFactoryImpl.getLog(MissionCenter.class);
     private static Logger logger = Logger.getLogger(MissionCenter.class.getName());//日志类
     private MissionConfig config = null;//平台配置对象句柄
 //    private MissionLog log = null;//日志对象句柄
@@ -109,7 +106,10 @@ public class MissionCenter
         }
 		
 		try {
-			missionCenter.channel_id = Integer.parseInt(missionCenter.configsMap.get("channel-id"));
+            int _channel_id = Integer.parseInt(missionCenter.configsMap.get("channel-id"));
+            System.out.println("当前通道号： " + _channel_id );
+            missionCenter.channel_id = _channel_id;
+            SmsplatGlobalVariable.CHANNEL_ID = _channel_id;
 			SmsplatGlobalVariable.PACK_QUANTITIES = Integer.parseInt(missionCenter.configsMap.get("pack-quantities"));
 			try {
 		            missionCenter.init();//任务中心对象初始化自己，并且调度各个子模块进行初始化
@@ -121,7 +121,6 @@ public class MissionCenter
 			}
 		} catch (Exception e1) {
 //			logger.info("未配置该引擎对应的短信发送通道......");
-            System.out.println("未配置该引擎对应的短信发送通道......");
             logger.error("未配置该引擎对应的通道编号，请检查BGEngineConfig.xml配置文件......");
             System.exit(0);
 		}		

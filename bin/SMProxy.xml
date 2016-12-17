@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="GB2312"?>
 <config>
-
+	<!-- 短信引擎配置 ，要将当前引擎配置成 短信发送引擎，只需要在 BGEngineConfig.xml 里修改 channel-id 的 value o 90 即可。-->
 	<Channel90>
 		<channel-class>com.binggou.sms.mission.core.send.impl.bg_sms.BGSMSCommon</channel-class>
+		<sms-server-url>http://222.73.117.156/msg/HttpBatchSendSM</sms-server-url>
+		<sms-account>ynCBHkJz8AM=</sms-account>
+		<sms-pwd>I/nl8dGDC3PXsCGIaMyvYg==</sms-pwd>
 	</Channel90>
+
+	<!-- 个推 push 引擎配置 ，要将当前引擎配置成push 引擎，只需要在 BGEngineConfig.xml 里修改 channel-id 的 value o 80 即可。-->
+	<Channel80>
+		<channel-class>com.binggou.sms.mission.core.send.impl.bg_getui.BGGeTuiCommon</channel-class>
+		<sms-server-url>http://222.73.117.156/msg/HttpBatchSendSM</sms-server-url>
+		<sms-account>ynCBHkJz8AM=</sms-account>
+		<sms-pwd>I/nl8dGDC3PXsCGIaMyvYg==</sms-pwd>
+	</Channel80>
 	
 </config>

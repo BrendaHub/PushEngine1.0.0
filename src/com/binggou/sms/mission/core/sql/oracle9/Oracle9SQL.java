@@ -3,6 +3,9 @@ package com.binggou.sms.mission.core.sql.oracle9;
 import com.binggou.mission.MissionCenter;
 import org.apache.log4j.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public final class Oracle9SQL {
 
 
@@ -32,21 +35,43 @@ public final class Oracle9SQL {
 		logger.debug("榨取数据SQL  = " + extractSqlNoPrior.toString());
 		return extractSqlNoPrior.toString();
 	}
-	
+
 	/**
-	 * 拼凑成执行sql语句
+	 * 消息推送任务榨取SQL
 	 * @param channel_id 通道号码
 	 * @param resend_times 重复次数
 	 * @param num 榨取条数
 	 * @return String sql语句
 	 */
-	public static String getExtractMySqlNoPrior(int channel_id,int resend_times,int num,long nowTime) {
+	public static String getExtractMySqlNoPrior_push(int channel_id,int resend_times,int num,long nowTime) {
 		//select p.id,m.title,content,ext_param,p.create_time,m.mesg_len,token,plat_type,push_type,push_kind from t_push_task p,t_message m;
-		StringBuffer extractSqlNoPrior = new StringBuffer(" select id, title, content, ext_param, create_time, status,err_info  clientId, clientId_type, push_type, push_os, badge_num ");
-		extractSqlNoPrior.append(" from bg_push_task ");
+		StringBuffer extractSqlNoPrior = new StringBuffer(" select id, title, content, ext_param, create_time, status,err_info , clientId, clientId_type, push_type, push_os, badge_num ");
+		extractSqlNoPrior.append(" from bg_task_push ");
 		extractSqlNoPrior.append(" where status = 0 and prepush_time < ");
 		extractSqlNoPrior.append(nowTime);
 		extractSqlNoPrior.append(" ORDER BY priority DESC ");
+		extractSqlNoPrior.append(" limit ");
+		extractSqlNoPrior.append(num);
+		logger.debug("榨取数据SQL  = " + extractSqlNoPrior.toString());
+		return extractSqlNoPrior.toString();
+	}
+
+	/**
+	 * 短信发送任务榨取SQL
+	 * @param channel_id 通道号码
+	 * @param resend_times 重复次数
+	 * @param num 榨取条数
+	 * @return String sql语句
+	 */
+	public static String getExtractMySqlNoPrior(int channel_id,int resend_times,int num, Date nowTime) {
+		//select p.id,m.title,content,ext_param,p.create_time,m.mesg_len,token,plat_type,push_type,push_kind from t_push_task p,t_message m;
+		StringBuffer extractSqlNoPrior = new StringBuffer(" select id, type ,mobile, content, status, err_info ");
+		extractSqlNoPrior.append(" from bg_task_sms ");
+		extractSqlNoPrior.append(" where status = 0 and insert_time < DATE_FORMAT('");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		extractSqlNoPrior.append(sdf.format(nowTime));
+		extractSqlNoPrior.append("','%Y-%m-%d %H:%i:%s')");
+		extractSqlNoPrior.append(" ORDER BY type DESC ");
 		extractSqlNoPrior.append(" limit ");
 		extractSqlNoPrior.append(num);
 		logger.debug("榨取数据SQL  = " + extractSqlNoPrior.toString());

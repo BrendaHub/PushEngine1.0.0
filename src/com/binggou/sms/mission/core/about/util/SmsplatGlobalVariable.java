@@ -246,6 +246,13 @@ public final class SmsplatGlobalVariable
 	public static int EXTRACT_CHANNEL_ID = 12;
 
 	/**
+	 * 当前引擎的通道号
+	 * 90 , 短信引擎
+	 * 80 , push引擎
+	 */
+	public static int CHANNEL_ID = 90;
+
+	/**
 	 * 通道状态
 	 * 0-好
 	 * 1-一般

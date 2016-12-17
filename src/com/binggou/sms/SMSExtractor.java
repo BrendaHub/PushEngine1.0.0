@@ -130,7 +130,13 @@ public class SMSExtractor extends Extractor {
 					
 					String tasks = task.getTaskId();
 					//将榨取队列里的状态设置为正在发
-					StringBuffer prepareUpdate= new StringBuffer(" update t_push_task set status = 2 where id in ( ");
+					String table_name = "";
+					if(SmsplatGlobalVariable.CHANNEL_ID == 80){//push 推送
+						table_name = "bg_task_push";
+					}else if(SmsplatGlobalVariable.CHANNEL_ID == 90){// sms 发送
+						table_name = "bg_task_sms";
+					}
+					StringBuffer prepareUpdate= new StringBuffer(" update "+table_name+" set status = 2 where id in ( ");
 					if(1 == SmsplatGlobalVariable.PACK_QUANTITIES){
 						prepareUpdate.append("'");
 						prepareUpdate.append(tasks);
@@ -139,7 +145,6 @@ public class SMSExtractor extends Extractor {
 						prepareUpdate.append(tasks);
 					}
 					prepareUpdate.append(" ) ");
-					System.out.println(">>>>>> "+ prepareUpdate.toString());
 					int	updateRows =sqlBridge.executeUpdate(prepareUpdate.toString());//在表里把状态置为1(正在推)
 					prepareUpdate = null;
 					tasks = null;
@@ -150,8 +155,7 @@ public class SMSExtractor extends Extractor {
 						/**提交成功的处理*/
 						if(maximun_flag){//执行了最高优先级的榨取后，往队列的头部添加
 							extractQueue.putTaskHead(task);// 提交新任务到榨取队列尾部
-//							logger.info("榨取到短信同时放到短信队列头部 ID = "+task.getTaskId());//写运行日志
-							System.out.println("榨取到短信同时放到短信队列头部 ID = "+task.getTaskId());//写运行日志
+							logger.info("榨取到短信同时放到短信队列头部 ID = "+task.getTaskId());//写运行日志
 						}else{//正常的榨取处理 
 							boolean b1 = extractQueue.putTask(task);// 提交新任务到榨取队列尾部
 							System.out.println(b1);
@@ -160,7 +164,7 @@ public class SMSExtractor extends Extractor {
 				}
 			}catch(Exception e){
 				e.printStackTrace();
-//				logger.error(e.getMessage());
+				logger.error(e.getMessage());
 			}
 			finally{
 				sqlBridge.clearResult();//清空数据
@@ -175,7 +179,7 @@ public class SMSExtractor extends Extractor {
 	 * @return 返回来list，里面放置task的列表
 	 */
 	private List extractByPriorForCitics(int num) {		
-		String procCall = SqlFactory.getExtractSql(db_type, channel_id,resend_times,num,new Date().getTime());// 榨取任务的sql语句
+		String procCall = SqlFactory.getExtractSql(db_type, channel_id, resend_times, num, new Date().getTime());// 榨取任务的sql语句
 //		logger.info("执行榨取的sql语句===="+procCall);
 		System.out.println("执行榨取的sql语句===="+procCall);
 		if (!sqlBridge.executeQuery(procCall))// 数据库连接查询失败
@@ -188,11 +192,138 @@ public class SMSExtractor extends Extractor {
 		} 
 		else 
 		{
-			//根据查询出来的数据开始组装处理任务队列
-			return resultSetToList();
+			//根据查询出来的数据开始组装处理任务队列， 在这里需要判断一下引擎的功能， 90 ，push; 80, sms
+			if(SmsplatGlobalVariable.CHANNEL_ID == 90 ){
+				return resultSetToList_SMS();
+			}else if(SmsplatGlobalVariable.CHANNEL_ID == 80){
+				return resultSetToList();
+			}else{
+				return null;
+			}
+
 		}
 	}
-	
+
+	//将结果集转换成集合，目的是用来实现批量处理
+	private List<Task> resultSetToList_SMS(){
+
+		List<Task> al = new ArrayList<Task>();
+		Task task = null;
+		while(sqlBridge.next()) //
+		{
+			task = new Task();
+			String taskId = sqlBridge.getFieldString("id");//记录ID 主键
+			task.setTaskId(taskId);		//设置id
+			String mobile=sqlBridge.getFieldString("mobile");//手机号码
+			task.setMobileTo(mobile);   //设置mobile
+			task.addAttrib("mesgId", taskId);// 设置推送消息的id
+			task.addAttrib("content", sqlBridge.getFieldString("content"));// 设置推送内容
+			task.addAttrib("status", sqlBridge.getFieldString("status"));// 设置发送状态
+			task.addAttrib("errInfo", sqlBridge.getFieldString("err_info"));// 设置推送状态描述
+			al.add(task);
+		}
+		int a= SmsplatGlobalVariable.PACK_QUANTITIES;
+		if(1== SmsplatGlobalVariable.PACK_QUANTITIES )
+			return al;
+
+//        //群发号码的组装
+//        //1.用map.put(msg+downsms_id,List);用短信内容+设备类型来做主键，List是所有的相同内容和设备类型的集合
+//        //2.用map来遍历取出各个主键，然后按照每次群发号码的个数来组建每个task，数据源从List里面取
+
+		List<Task> al_qf = new ArrayList<Task>();
+		if(al.size()>0){
+			/**
+			 * 执行第一步
+			 * 用map.put(msg+downsms_id+SPLITFLAG,List);用短信内容+设备类型+是否拆分标识+短信重发策略 来做主键，List是所有的相同内容和设备类型的集合
+			 */
+			Map<String,List<Task>> map = new HashMap<String,List<Task>>();
+			for(int j=0;j<al.size();j++){
+				Task dto = (Task)al.get(j);
+				String content = (String)dto.getAttribValue("content");
+				//String token = (String)dto.getMobileTo();
+				// String resendStrategy = (String)dto.getAttribValue("RESENDSTRATEGY");
+				String key  = content;
+
+				if(map.get(key)!=null){
+					//已存在，只需要把已存在的List取出来，再加上此个号码就行
+					List<Task> alsub =  (ArrayList<Task>)map.get(key);
+					alsub.add(dto);
+					map.put(key,alsub);
+				}else{
+					//不存在，直接添加就行
+					List<Task> alsub = new ArrayList<Task>();
+					alsub.add(dto);
+					map.put(key,alsub);
+				}
+			}
+
+			/**
+			 * 执行第二步
+			 * 用map来遍历取出各个主键，然后按照每次群发token的个数来组建每个task，数据源从List里面取
+			 */
+			Set keys = map.keySet();
+			Iterator iter = keys.iterator();
+			String currentMsg = "";
+			while(iter.hasNext())
+			{
+				currentMsg = (String)iter.next();
+				List<Task> list = (ArrayList<Task>)map.get(currentMsg);
+				if(list.size()>0){
+					StringBuffer tokens = new StringBuffer();
+					StringBuffer sendids = new StringBuffer();
+					//StringBuffer mobiles = new StringBuffer();
+					/**
+					 * 主要用来组装每个token和主键 以及手机号（用于下发短信）
+					 * token格式如下:token1,token2...token10;token11,token12...
+					 * 主键格式如下:'send_id1','send_id2',...;'send_id11','send_id12'...
+					 * 手机号格式如下：mobile_to1,mobile_to2,...;mobile_to11,mobile_to12...
+					 */
+					for(int k=0;k<list.size();k++){
+						Task tk = (Task)list.get(k);
+						/**
+						 * 每组有多少号码的组装
+						 */
+						if(k!=0&&(k%SmsplatGlobalVariable.PACK_QUANTITIES)==0){
+							//刚好是配置的号码个数+1
+							tokens.append(";");
+							sendids.append(";");
+						}
+						tokens.append(tk.getMobileTo());
+						tokens.append(",");
+
+						sendids.append("'");
+						sendids.append(tk.getTaskId());
+						sendids.append("'");
+						sendids.append(",");
+					}
+					Task tk1 = list.get(0);
+					int length  = 0;
+					if(tokens!=null)
+						length = tokens.toString().split(";").length;
+					if(length>0){
+						String[] tokens_sub = tokens.toString().split(";");
+						for(int i = 0;i<tokens_sub.length;i++){
+							Task tk0 = new Task();
+							String sendid = sendids.toString().split(";")[i];
+							//tk0.addAttrib("ids",sendid.substring(0,sendid.length()-1));
+							tk0.setTaskId(sendid.substring(0,sendid.length()-1));
+
+							String token = tokens.toString().split(";")[i];
+							//tk0.addAttrib("tokens",token.substring(0,token.length()-1));
+							tk0.setMobileTo(token.substring(0,token.length()-1));
+							tk0.addAttrib("mesgId", tk1.getAttribValue("mesgId"));// 设置推送消息的id
+							tk0.addAttrib("content", tk1.getAttribValue("content"));// 设置推送内容
+							tk0.addAttrib("status", tk1.getAttribValue("status"));// 设置发送状态
+							tk0.addAttrib("errInfo", tk1.getAttribValue("errInfo"));// 设置推送状态描述
+							al_qf.add(tk0);
+						}
+					}
+				}
+			}
+
+		}
+		return al_qf;
+	}
 
 	/**
 	 * 将结果集转换成集合
@@ -241,7 +372,7 @@ public class SMSExtractor extends Extractor {
               Task dto = (Task)al.get(j);
               String title = (String)dto.getAttribValue("title");
               String content = (String)dto.getAttribValue("content");
-              String platType = (String)dto.getAttribValue("platType");
+              String platType = (String)dto.getAttribValue("pushOs");
               //String token = (String)dto.getMobileTo();
              // String resendStrategy = (String)dto.getAttribValue("RESENDSTRATEGY");
               String key  = title+content+platType;
